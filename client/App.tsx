@@ -30,25 +30,59 @@ export function App() {
 
             {/* Students Routes */}
             <Route path="/students" element={<Students />} />
-            <Route path="/students/:id" element={<Placeholder title="Student Profile" feature="studentProfile" />} />
+            <Route
+              path="/students/:id"
+              element={
+                <Placeholder title="Student Profile" feature="studentProfile" />
+              }
+            />
 
             {/* Assignment Routes */}
-          <Route path="/assignments" element={<Assignments />} />
-          <Route path="/assignments/create" element={<CreateAssignment />} />
-          <Route path="/assignments/:assignmentId/submissions" element={<AssignmentSubmissions />} />
-          <Route path="/assignments/:id" element={<Placeholder title="Assignment Details" feature="assignmentDetails" />} />
+            <Route path="/assignments" element={<Assignments />} />
+            <Route path="/assignments/create" element={<CreateAssignment />} />
+            <Route
+              path="/assignments/:assignmentId/submissions"
+              element={<AssignmentSubmissions />}
+            />
+            <Route
+              path="/assignments/:id"
+              element={
+                <Placeholder
+                  title="Assignment Details"
+                  feature="assignmentDetails"
+                />
+              }
+            />
 
             {/* Attendance Routes */}
-          <Route path="/attendance" element={<Attendance />} />
-          <Route path="/attendance/new" element={<TakeAttendance />} />
+            <Route path="/attendance" element={<Attendance />} />
+            <Route path="/attendance/new" element={<TakeAttendance />} />
 
             {/* Analytics Route */}
-            <Route path="/analytics" element={<Placeholder title="Attendance Analytics Dashboard" feature="analytics" />} />
+            <Route
+              path="/analytics"
+              element={
+                <Placeholder
+                  title="Attendance Analytics Dashboard"
+                  feature="analytics"
+                />
+              }
+            />
 
             {/* Other Routes */}
-            <Route path="/timetable" element={<Placeholder title="Weekly Timetable" feature="timetable" />} />
+            <Route
+              path="/timetable"
+              element={
+                <Placeholder title="Weekly Timetable" feature="timetable" />
+              }
+            />
             <Route path="/notices" element={<Notices />} />
-            <Route path="/submissions" element={<Placeholder title="Submission Queue" feature="submissions" />} />
+            <Route
+              path="/submissions"
+              element={
+                <Placeholder title="Submission Queue" feature="submissions" />
+              }
+            />
 
             {/* Catch-all route */}
             <Route path="*" element={<NotFound />} />

@@ -37,8 +37,8 @@ export function App() {
             <Route path="/assignments/:id" element={<Placeholder title="Assignment Details" feature="assignmentDetails" />} />
 
             {/* Attendance Routes */}
-            <Route path="/attendance" element={<Attendance />} />
-            <Route path="/attendance/new" element={<Placeholder title="Take Attendance" feature="takeAttendance" />} />
+          <Route path="/attendance" element={<Attendance />} />
+          <Route path="/attendance/new" element={<TakeAttendance />} />
 
             {/* Analytics Route */}
             <Route path="/analytics" element={<Placeholder title="Attendance Analytics Dashboard" feature="analytics" />} />

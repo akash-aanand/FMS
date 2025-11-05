@@ -11,6 +11,7 @@ import Placeholder from "./pages/Placeholder";
 import Students from "./pages/Students";
 import Assignments from "./pages/Assignments";
 import CreateAssignment from "./pages/CreateAssignment";
+import AssignmentSubmissions from "./pages/AssignmentSubmissions";
 import Attendance from "./pages/Attendance";
 import TakeAttendance from "./pages/TakeAttendance";
 import Notices from "./pages/Notices";

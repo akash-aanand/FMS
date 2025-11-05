@@ -1,8 +1,10 @@
-import { Header } from '@/components/layout/Header';
+import { MainLayout } from '@/components/layout/MainLayout';
 import { StatCard } from '@/components/dashboard/StatCard';
 import { WeeklyTimetable } from '@/components/dashboard/WeeklyTimetable';
 import { NoticesBoard } from '@/components/dashboard/NoticesBoard';
 import { QuickActions } from '@/components/dashboard/QuickActions';
+import { AttendanceChart } from '@/components/dashboard/AttendanceChart';
+import { BatchStatsChart } from '@/components/dashboard/BatchStatsChart';
 import { Users, AlertCircle, BarChart3, Bell } from 'lucide-react';
 import { SAMPLE_STUDENTS, SAMPLE_ASSIGNMENTS, SAMPLE_NOTICES } from '@/lib/sample-data';
 
@@ -18,18 +20,16 @@ export default function Index() {
   const atRiskStudents = SAMPLE_STUDENTS.filter(s => s.attendance < 60).length;
 
   return (
-    <div className="min-h-screen bg-slate-50">
-      <Header />
-
-      <main className="max-w-7xl mx-auto px-4 py-8 sm:px-6 lg:px-8">
+    <MainLayout>
+      <div className="px-6 py-6">
         {/* Welcome Section */}
         <div className="mb-8">
-          <h1 className="text-3xl font-bold text-slate-900">Welcome, Dr. Rajesh Kumar</h1>
-          <p className="mt-2 text-slate-600">Here's what's happening in your classes today</p>
+          <h1 className="text-4xl font-bold text-slate-900">Dashboard</h1>
+          <p className="mt-2 text-slate-600">Welcome back, Dr. Eleanor Vance. Here's your overview.</p>
         </div>
 
         {/* Stat Cards Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
           <StatCard
             title="Total Students"
             value={totalStudents}
@@ -81,10 +81,16 @@ export default function Index() {
           </div>
         )}
 
+        {/* Charts Section */}
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
+          <AttendanceChart />
+          <BatchStatsChart />
+        </div>
+
         {/* Main Content Grid */}
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
           {/* Left Column - Large Widgets */}
-          <div className="lg:col-span-2 space-y-8">
+          <div className="lg:col-span-2 space-y-6">
             <WeeklyTimetable />
             <NoticesBoard />
           </div>
@@ -94,7 +100,7 @@ export default function Index() {
             <QuickActions />
           </div>
         </div>
-      </main>
-    </div>
+      </div>
+    </MainLayout>
   );
 }

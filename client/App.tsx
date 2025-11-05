@@ -9,6 +9,11 @@ import { BrowserRouter, Routes, Route } from "react-router-dom";
 import Index from "./pages/Index";
 import NotFound from "./pages/NotFound";
 import Placeholder from "./pages/Placeholder";
+import Students from "./pages/Students";
+import Assignments from "./pages/Assignments";
+import CreateAssignment from "./pages/CreateAssignment";
+import Attendance from "./pages/Attendance";
+import Notices from "./pages/Notices";
 
 const queryClient = new QueryClient();
 
@@ -22,16 +27,16 @@ const App = () => (
           <Route path="/" element={<Index />} />
 
           {/* Students Routes */}
-          <Route path="/students" element={<Placeholder title="Students List & Search" feature="students" />} />
+          <Route path="/students" element={<Students />} />
           <Route path="/students/:id" element={<Placeholder title="Student Profile" feature="studentProfile" />} />
 
           {/* Assignment Routes */}
-          <Route path="/assignments" element={<Placeholder title="Assignment Tracking Dashboard" feature="assignments" />} />
-          <Route path="/assignments/create" element={<Placeholder title="Create Assignment" feature="createAssignment" />} />
+          <Route path="/assignments" element={<Assignments />} />
+          <Route path="/assignments/create" element={<CreateAssignment />} />
           <Route path="/assignments/:id" element={<Placeholder title="Assignment Details" feature="assignmentDetails" />} />
 
           {/* Attendance Routes */}
-          <Route path="/attendance" element={<Placeholder title="Attendance Analytics" feature="attendance" />} />
+          <Route path="/attendance" element={<Attendance />} />
           <Route path="/attendance/new" element={<Placeholder title="Take Attendance" feature="takeAttendance" />} />
 
           {/* Analytics Route */}
@@ -39,7 +44,7 @@ const App = () => (
 
           {/* Other Routes */}
           <Route path="/timetable" element={<Placeholder title="Weekly Timetable" feature="timetable" />} />
-          <Route path="/notices" element={<Placeholder title="All Notices" feature="notices" />} />
+          <Route path="/notices" element={<Notices />} />
           <Route path="/submissions" element={<Placeholder title="Submission Queue" feature="submissions" />} />
 
           {/* Catch-all route */}

@@ -12,6 +12,7 @@ import Students from "./pages/Students";
 import Assignments from "./pages/Assignments";
 import CreateAssignment from "./pages/CreateAssignment";
 import Attendance from "./pages/Attendance";
+import TakeAttendance from "./pages/TakeAttendance";
 import Notices from "./pages/Notices";
 
 const queryClient = new QueryClient();

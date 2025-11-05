@@ -21,8 +21,37 @@
     --popover: 0 0% 100%;
     --popover-foreground: 222.2 84% 4.9%;
 
-    --primary: 222.2 47.4% 11.2%;
-    --primary-foreground: 210 40% 98%;
+    --primary: 217 91.2% 59.8%;
+    --primary-foreground: 0 0% 100%;
+    --primary-50: 217 100% 97%;
+    --primary-100: 217 100% 93%;
+    --primary-200: 217 98% 87%;
+    --primary-300: 217 97% 76%;
+    --primary-400: 217 92% 69%;
+    --primary-500: 217 91.2% 59.8%;
+    --primary-600: 217 100% 50%;
+    --primary-700: 217 100% 45%;
+
+    --success: 142 71.8% 29.3%;
+    --success-foreground: 0 0% 100%;
+    --success-50: 142 76% 92%;
+    --success-100: 142 72% 85%;
+    --success-500: 142 71.8% 29.3%;
+    --success-600: 142 76% 25%;
+
+    --warning: 38 92.1% 50.2%;
+    --warning-foreground: 0 0% 10%;
+    --warning-50: 38 100% 95%;
+    --warning-100: 38 96% 87%;
+    --warning-500: 38 92.1% 50.2%;
+    --warning-600: 38 92% 43%;
+
+    --danger: 0 84.2% 60.2%;
+    --danger-foreground: 0 0% 100%;
+    --danger-50: 0 100% 97%;
+    --danger-100: 0 96% 89%;
+    --danger-500: 0 84.2% 60.2%;
+    --danger-600: 0 90% 50%;
 
     --secondary: 210 40% 96.1%;
     --secondary-foreground: 222.2 47.4% 11.2%;
@@ -38,7 +67,7 @@
 
     --border: 214.3 31.8% 91.4%;
     --input: 214.3 31.8% 91.4%;
-    --ring: 222.2 84% 4.9%;
+    --ring: 217 91.2% 59.8%;
 
     --radius: 0.5rem;
 

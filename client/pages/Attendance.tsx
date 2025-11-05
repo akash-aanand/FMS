@@ -67,6 +67,34 @@ export default function Attendance() {
     return records ? records.filter(r => r.status === 'absent').length : 0;
   };
 
+  const handleExport = (format: 'csv' | 'pdf') => {
+    if (format === 'csv') {
+      // Create CSV content
+      const headers = ['Roll Number', 'Student Name', 'Batch', 'Overall Attendance %', 'Status'];
+      const rows = filteredStudents.map(student => [
+        student.rollNumber,
+        student.name,
+        student.batch,
+        student.attendance,
+        student.attendance >= 75 ? 'Good' : student.attendance >= 60 ? 'Low' : 'At Risk'
+      ]);
+
+      const csvContent = [
+        headers.join(','),
+        ...rows.map(row => row.join(','))
+      ].join('\n');
+
+      // Create and download CSV file
+      const element = document.createElement('a');
+      element.setAttribute('href', 'data:text/csv;charset=utf-8,' + encodeURIComponent(csvContent));
+      element.setAttribute('download', `attendance_${new Date().toISOString().split('T')[0]}.csv`);
+      element.style.display = 'none';
+      document.body.appendChild(element);
+      element.click();
+      document.body.removeChild(element);
+    }
+  };
+
   return (
     <MainLayout>
       <div className="px-6 py-6">
@@ -77,9 +105,13 @@ export default function Attendance() {
             <p className="text-slate-600 mt-1">View and manage student attendance</p>
           </div>
           <div className="flex gap-3">
-            <Button variant="outline" className="flex items-center gap-2">
+            <Button
+              variant="outline"
+              className="flex items-center gap-2"
+              onClick={() => handleExport('csv')}
+            >
               <Download className="h-4 w-4" />
-              Export
+              Export to CSV
             </Button>
             <Button asChild className="bg-primary-600 hover:bg-primary-700 text-white flex items-center gap-2">
               <Link to="/attendance/new">

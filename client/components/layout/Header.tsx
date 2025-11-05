@@ -1,19 +1,9 @@
 import { Bell } from 'lucide-react';
-import { Input } from '@/components/ui/input';
 
 export function Header() {
   return (
     <header className="fixed top-0 left-0 right-0 z-30 border-b border-slate-200 bg-white shadow-sm">
-      <div className="flex items-center justify-between h-20 px-6 gap-4">
-        {/* Search Bar */}
-        <div className="flex-1 max-w-xs">
-          <Input
-            type="search"
-            placeholder="Search..."
-            className="h-9"
-          />
-        </div>
-
+      <div className="flex items-center justify-end h-20 px-6 gap-4">
         {/* Right Section */}
         <div className="flex items-center gap-6">
           {/* Notifications */}

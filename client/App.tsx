@@ -33,9 +33,10 @@ export function App() {
             <Route path="/students/:id" element={<Placeholder title="Student Profile" feature="studentProfile" />} />
 
             {/* Assignment Routes */}
-            <Route path="/assignments" element={<Assignments />} />
-            <Route path="/assignments/create" element={<CreateAssignment />} />
-            <Route path="/assignments/:id" element={<Placeholder title="Assignment Details" feature="assignmentDetails" />} />
+          <Route path="/assignments" element={<Assignments />} />
+          <Route path="/assignments/create" element={<CreateAssignment />} />
+          <Route path="/assignments/:assignmentId/submissions" element={<AssignmentSubmissions />} />
+          <Route path="/assignments/:id" element={<Placeholder title="Assignment Details" feature="assignmentDetails" />} />
 
             {/* Attendance Routes */}
           <Route path="/attendance" element={<Attendance />} />

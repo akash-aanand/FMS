@@ -22,6 +22,17 @@ import { useNavigate } from "react-router-dom";
 
 const queryClient = new QueryClient();
 
+// Protected route wrapper
+function ProtectedRoute({ element }: { element: React.ReactNode }) {
+  const isLoggedIn = localStorage.getItem('isLoggedIn');
+
+  if (!isLoggedIn) {
+    return <Login />;
+  }
+
+  return element;
+}
+
 export function App() {
   return (
     <QueryClientProvider client={queryClient}>
@@ -30,7 +41,11 @@ export function App() {
         <Sonner />
         <BrowserRouter>
           <Routes>
-            <Route path="/" element={<Index />} />
+            {/* Login Route */}
+            <Route path="/login" element={<Login />} />
+
+            {/* Protected Routes */}
+            <Route path="/" element={<ProtectedRoute element={<Index />} />} />
 
             {/* Students Routes */}
             <Route path="/students" element={<Students />} />

@@ -226,9 +226,19 @@ export default function Attendance() {
                       </div>
                     </div>
                   </div>
-                  <button className="text-primary-600 hover:text-primary-700 text-sm font-medium">
-                    View Details
-                  </button>
+                  <div className="flex flex-col items-end gap-2">
+                    <span className={cn('px-3 py-1 rounded-full text-xs font-semibold', submissionStatus[student.id]?.submitted ? 'bg-success-100 text-success-700' : 'bg-slate-100 text-slate-700')}>
+                      {submissionStatus[student.id]?.submitted ? 'Submitted' : 'Draft'}
+                    </span>
+                    <button
+                      onClick={() => {
+                        setSelectedStudent(student.id);
+                        setShowDetailModal(true);
+                      }}
+                      className="text-primary-600 hover:text-primary-700 text-sm font-medium">
+                      View Details
+                    </button>
+                  </div>
                 </div>
 
                 {/* Attendance Overview */}

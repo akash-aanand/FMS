@@ -147,11 +147,11 @@ export default function Students() {
             <p className="text-slate-600 mt-1">View, search, and export student information by batch and semester.</p>
           </div>
           <div className="flex gap-3">
-            <Button variant="outline" className="flex items-center gap-2">
+            <Button variant="outline" className="flex items-center gap-2" onClick={handleExportCSV}>
               <Download className="h-4 w-4" />
               Export
             </Button>
-            <Button className="bg-primary-600 hover:bg-primary-700 text-white flex items-center gap-2">
+            <Button className="bg-primary-600 hover:bg-primary-700 text-white flex items-center gap-2" onClick={() => setShowAddModal(true)}>
               <Plus className="h-4 w-4" />
               Add Student
             </Button>

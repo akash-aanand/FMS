@@ -15,6 +15,7 @@ import AssignmentSubmissions from "./pages/AssignmentSubmissions";
 import Attendance from "./pages/Attendance";
 import TakeAttendance from "./pages/TakeAttendance";
 import Notices from "./pages/Notices";
+import Analytics from "./pages/Analytics";
 
 const queryClient = new QueryClient();
 

@@ -21,6 +21,12 @@ export default function TakeAttendance() {
   // Get students for selected batch
   const batchStudents = SAMPLE_STUDENTS.filter(s => s.batch === selectedBatch);
 
+  // Filter students by search term
+  const filteredStudents = batchStudents.filter(s =>
+    s.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+    s.rollNumber.toLowerCase().includes(searchTerm.toLowerCase())
+  );
+
   // Get subjects for selected batch from timetable
   const batchSubjects = Array.from(
     new Set(

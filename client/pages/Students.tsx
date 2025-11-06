@@ -1,8 +1,8 @@
 import { MainLayout } from '@/components/layout/MainLayout';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
-import { Download, Plus, MoreVertical, Eye, Edit, MessageCircle } from 'lucide-react';
-import { SAMPLE_STUDENTS } from '@/lib/sample-data';
+import { Download, Plus, MoreVertical, Eye, Edit, MessageCircle, X } from 'lucide-react';
+import { SAMPLE_STUDENTS, Student } from '@/lib/sample-data';
 import { useState, useMemo } from 'react';
 import { cn } from '@/lib/utils';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';

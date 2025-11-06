@@ -1,11 +1,12 @@
 import { MainLayout } from '@/components/layout/MainLayout';
 import { Button } from '@/components/ui/button';
-import { Plus, Eye, Edit, Download, Trash2 } from 'lucide-react';
-import { SAMPLE_ASSIGNMENTS } from '@/lib/sample-data';
+import { Plus, Eye, Edit, Download, Trash2, Calendar, X } from 'lucide-react';
+import { SAMPLE_ASSIGNMENTS, Assignment } from '@/lib/sample-data';
 import { useState } from 'react';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Link } from 'react-router-dom';
 import { Input } from '@/components/ui/input';
+import { cn } from '@/lib/utils';
 
 const FILTER_OPTIONS = ['All', 'Active', 'Completed', 'Overdue'];
 const BATCHES = ['All', 'CS-A', 'CS-B', 'CS-C'];

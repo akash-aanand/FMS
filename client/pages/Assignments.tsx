@@ -272,6 +272,171 @@ export default function Assignments() {
             <p className="text-slate-600">No assignments found matching your criteria</p>
           </div>
         )}
+
+        {/* View Submissions Modal */}
+        {showViewModal && viewingAssignment && (
+          <div className="fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center p-4">
+            <div className="bg-white rounded-lg max-w-2xl w-full shadow-lg max-h-96 overflow-y-auto">
+              <div className="flex items-center justify-between p-6 border-b border-slate-200 sticky top-0 bg-white">
+                <h2 className="text-lg font-semibold text-slate-900">View Submissions - {viewingAssignment.title}</h2>
+                <button
+                  onClick={() => setShowViewModal(false)}
+                  className="text-slate-400 hover:text-slate-600"
+                >
+                  <X className="h-5 w-5" />
+                </button>
+              </div>
+
+              <div className="p-6">
+                <div className="space-y-4">
+                  <div className="grid grid-cols-3 gap-4 mb-6">
+                    <div className="bg-success-50 rounded-lg p-4 text-center">
+                      <p className="text-sm text-success-600 font-medium">Submitted</p>
+                      <p className="text-3xl font-bold text-success-600">{viewingAssignment.submitted}</p>
+                    </div>
+                    <div className="bg-warning-50 rounded-lg p-4 text-center">
+                      <p className="text-sm text-warning-600 font-medium">Pending</p>
+                      <p className="text-3xl font-bold text-warning-600">{viewingAssignment.pending}</p>
+                    </div>
+                    <div className="bg-danger-50 rounded-lg p-4 text-center">
+                      <p className="text-sm text-danger-600 font-medium">Overdue</p>
+                      <p className="text-3xl font-bold text-danger-600">{viewingAssignment.overdue}</p>
+                    </div>
+                  </div>
+
+                  <div className="border-t pt-4">
+                    <h3 className="font-semibold text-slate-900 mb-3">Assignment Details</h3>
+                    <div className="space-y-2 text-sm">
+                      <p><span className="text-slate-600">Subject:</span> <span className="font-medium">{viewingAssignment.subject}</span></p>
+                      <p><span className="text-slate-600">Batch:</span> <span className="font-medium">{viewingAssignment.batch}</span></p>
+                      <p><span className="text-slate-600">Due Date:</span> <span className="font-medium">{new Date(viewingAssignment.dueDate).toLocaleDateString()}</span></p>
+                      <p><span className="text-slate-600">Total Marks:</span> <span className="font-medium">{viewingAssignment.totalMarks}</span></p>
+                      <p><span className="text-slate-600">Total Students:</span> <span className="font-medium">{viewingAssignment.totalStudents}</span></p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <div className="flex gap-3 justify-end p-6 border-t border-slate-200">
+                <Button variant="outline" onClick={() => setShowViewModal(false)}>
+                  Close
+                </Button>
+              </div>
+            </div>
+          </div>
+        )}
+
+        {/* Edit Assignment Modal */}
+        {showEditModal && editingAssignment && (
+          <div className="fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center p-4">
+            <div className="bg-white rounded-lg max-w-2xl w-full shadow-lg max-h-96 overflow-y-auto">
+              <div className="flex items-center justify-between p-6 border-b border-slate-200 sticky top-0 bg-white">
+                <h2 className="text-lg font-semibold text-slate-900">Edit Assignment</h2>
+                <button
+                  onClick={() => setShowEditModal(false)}
+                  className="text-slate-400 hover:text-slate-600"
+                >
+                  <X className="h-5 w-5" />
+                </button>
+              </div>
+
+              <div className="p-6 space-y-4">
+                <div>
+                  <label className="text-sm font-medium text-slate-700 block mb-1">Title</label>
+                  <Input
+                    type="text"
+                    value={editingAssignment.title}
+                    onChange={(e) => setEditingAssignment({ ...editingAssignment, title: e.target.value })}
+                    className="h-10"
+                  />
+                </div>
+
+                <div className="grid grid-cols-2 gap-4">
+                  <div>
+                    <label className="text-sm font-medium text-slate-700 block mb-1">Subject</label>
+                    <Input
+                      type="text"
+                      value={editingAssignment.subject}
+                      onChange={(e) => setEditingAssignment({ ...editingAssignment, subject: e.target.value })}
+                      className="h-10"
+                    />
+                  </div>
+                  <div>
+                    <label className="text-sm font-medium text-slate-700 block mb-1">Batch</label>
+                    <Input
+                      type="text"
+                      value={editingAssignment.batch}
+                      onChange={(e) => setEditingAssignment({ ...editingAssignment, batch: e.target.value })}
+                      className="h-10"
+                    />
+                  </div>
+                </div>
+
+                <div className="grid grid-cols-2 gap-4">
+                  <div>
+                    <label className="text-sm font-medium text-slate-700 block mb-1">Due Date</label>
+                    <Input
+                      type="date"
+                      value={editingAssignment.dueDate}
+                      onChange={(e) => setEditingAssignment({ ...editingAssignment, dueDate: e.target.value })}
+                      className="h-10"
+                    />
+                  </div>
+                  <div>
+                    <label className="text-sm font-medium text-slate-700 block mb-1">Total Marks</label>
+                    <Input
+                      type="number"
+                      value={editingAssignment.totalMarks}
+                      onChange={(e) => setEditingAssignment({ ...editingAssignment, totalMarks: parseInt(e.target.value) })}
+                      className="h-10"
+                    />
+                  </div>
+                </div>
+
+                <div>
+                  <label className="text-sm font-medium text-slate-700 block mb-1">Status</label>
+                  <Select
+                    value={editingAssignment.status || 'published'}
+                    onValueChange={(value) => setEditingAssignment({ ...editingAssignment, status: value as 'draft' | 'published' | 'scheduled' })}
+                  >
+                    <SelectTrigger className="h-10">
+                      <SelectValue />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="draft">Save as Draft</SelectItem>
+                      <SelectItem value="published">Publish Now</SelectItem>
+                      <SelectItem value="scheduled">Schedule for Later</SelectItem>
+                    </SelectContent>
+                  </Select>
+                </div>
+
+                {editingAssignment.status === 'scheduled' && (
+                  <div>
+                    <label className="text-sm font-medium text-slate-700 block mb-1">Scheduled Date</label>
+                    <Input
+                      type="date"
+                      value={editingAssignment.scheduledDate || ''}
+                      onChange={(e) => setEditingAssignment({ ...editingAssignment, scheduledDate: e.target.value })}
+                      className="h-10"
+                    />
+                  </div>
+                )}
+              </div>
+
+              <div className="flex gap-3 justify-end p-6 border-t border-slate-200">
+                <Button variant="outline" onClick={() => setShowEditModal(false)}>
+                  Cancel
+                </Button>
+                <Button
+                  className="bg-primary-600 hover:bg-primary-700 text-white"
+                  onClick={handleSaveAssignment}
+                >
+                  Save Changes
+                </Button>
+              </div>
+            </div>
+          </div>
+        )}
       </div>
     </MainLayout>
   );

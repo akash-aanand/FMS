@@ -69,6 +69,74 @@ export default function Students() {
     return 'bg-danger-100 text-danger-700';
   };
 
+  const handleAddStudent = () => {
+    if (!newStudent.name || !newStudent.rollNumber || !newStudent.email || !newStudent.phone) {
+      alert('Please fill in all required fields');
+      return;
+    }
+
+    const student: Student = {
+      id: Date.now().toString(),
+      name: newStudent.name,
+      rollNumber: newStudent.rollNumber,
+      batch: newStudent.batch || 'CS-A',
+      email: newStudent.email,
+      phone: newStudent.phone,
+      branch: newStudent.branch,
+      semester: newStudent.semester,
+      section: newStudent.section,
+      fathersName: newStudent.fathersName,
+      attendance: newStudent.attendance || 75,
+      cgpa: newStudent.cgpa || 7.5,
+    };
+
+    setStudents([...students, student]);
+    setShowAddModal(false);
+    setNewStudent({
+      name: '',
+      rollNumber: '',
+      batch: 'CS-A',
+      email: '',
+      phone: '',
+      branch: '',
+      semester: '',
+      section: '',
+      fathersName: '',
+      attendance: 75,
+      cgpa: 7.5,
+    });
+  };
+
+  const handleExportCSV = () => {
+    const headers = ['Roll Number', 'Student Name', 'Batch', 'Branch', 'Semester', 'Section', 'Father\'s Name', 'Email', 'Phone', 'Attendance', 'CGPA'];
+    const rows = filteredStudents.map(student => [
+      student.rollNumber,
+      student.name,
+      student.batch,
+      student.branch || '-',
+      student.semester || '-',
+      student.section || '-',
+      student.fathersName || '-',
+      student.email,
+      student.phone,
+      student.attendance,
+      student.cgpa,
+    ]);
+
+    const csvContent = [
+      headers.join(','),
+      ...rows.map(row => row.map(col => `"${col}"`).join(',')),
+    ].join('\n');
+
+    const element = document.createElement('a');
+    element.setAttribute('href', 'data:text/csv;charset=utf-8,' + encodeURIComponent(csvContent));
+    element.setAttribute('download', `students_${new Date().toISOString().split('T')[0]}.csv`);
+    element.style.display = 'none';
+    document.body.appendChild(element);
+    element.click();
+    document.body.removeChild(element);
+  };
+
   return (
     <MainLayout>
       <div className="px-6 py-6">

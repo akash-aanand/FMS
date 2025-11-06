@@ -207,7 +207,7 @@ export default function TakeAttendance() {
               <div className="grid grid-cols-3 gap-4">
                 <div className="text-center">
                   <p className="text-sm text-slate-600">Total Students</p>
-                  <p className="text-2xl font-bold text-slate-900">{batchStudents.length}</p>
+                  <p className="text-2xl font-bold text-slate-900">{filteredStudents.length}</p>
                 </div>
                 <div className="text-center">
                   <p className="text-sm text-success-600 font-medium">Present</p>

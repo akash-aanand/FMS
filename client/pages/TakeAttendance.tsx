@@ -153,9 +153,20 @@ export default function TakeAttendance() {
               </div>
             </div>
 
+            {/* Search Students */}
+            <div className="mb-4">
+              <Input
+                type="search"
+                placeholder="Search students by name or roll number..."
+                value={searchTerm}
+                onChange={(e) => setSearchTerm(e.target.value)}
+                className="h-10"
+              />
+            </div>
+
             {/* Grid Layout - Two columns on larger screens */}
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6 max-h-96 overflow-y-auto">
-              {batchStudents.map(student => (
+              {filteredStudents.map(student => (
                 <div
                   key={student.id}
                   onClick={() => handleStudentToggle(student.id)}

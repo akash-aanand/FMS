@@ -36,6 +36,42 @@ export default function Assignments() {
     return matchesSearch;
   });
 
+  const handleDeleteAssignment = (id: string) => {
+    if (confirm('Are you sure you want to delete this assignment?')) {
+      setAssignments(assignments.filter(a => a.id !== id));
+      alert('Assignment deleted successfully!');
+    }
+  };
+
+  const handleDownloadAssignments = (assignment: Assignment) => {
+    const data = JSON.stringify(assignment, null, 2);
+    const element = document.createElement('a');
+    element.setAttribute('href', 'data:application/json;charset=utf-8,' + encodeURIComponent(data));
+    element.setAttribute('download', `${assignment.title.replace(/\s+/g, '_')}_details.json`);
+    element.style.display = 'none';
+    document.body.appendChild(element);
+    element.click();
+    document.body.removeChild(element);
+  };
+
+  const handleEditAssignment = (assignment: Assignment) => {
+    setEditingAssignment({ ...assignment });
+    setShowEditModal(true);
+  };
+
+  const handleSaveAssignment = () => {
+    if (!editingAssignment) return;
+    setAssignments(assignments.map(a => a.id === editingAssignment.id ? editingAssignment : a));
+    setShowEditModal(false);
+    setEditingAssignment(null);
+    alert('Assignment updated successfully!');
+  };
+
+  const handleViewSubmissions = (assignment: Assignment) => {
+    setViewingAssignment(assignment);
+    setShowViewModal(true);
+  };
+
   return (
     <MainLayout>
       <div className="px-6 py-6">

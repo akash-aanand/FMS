@@ -45,6 +45,15 @@ export default function Attendance() {
   const [searchTerm, setSearchTerm] = useState("");
   const [attendanceRecords] = useState(generateAttendanceRecords());
   const [currentPage, setCurrentPage] = useState(1);
+  const [selectedStudent, setSelectedStudent] = useState<string | null>(null);
+  const [showDetailModal, setShowDetailModal] = useState(false);
+  const [submissionStatus] = useState<Record<string, { submitted: boolean; submittedAt?: string; status: string }>>({
+    '1': { submitted: true, submittedAt: '2024-11-05 09:30 AM', status: 'submitted' },
+    '2': { submitted: true, submittedAt: '2024-11-04 10:15 AM', status: 'submitted' },
+    '3': { submitted: false, status: 'draft' },
+    '4': { submitted: true, submittedAt: '2024-11-05 02:00 PM', status: 'submitted' },
+    '5': { submitted: false, status: 'draft' },
+  });
   const itemsPerPage = 10;
 
   const filteredStudents = useMemo(() => {

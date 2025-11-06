@@ -1,7 +1,8 @@
-import { LayoutDashboard, Users, Calendar, BookOpen, BarChart3, Settings, LogOut, ChevronLeft, ChevronRight } from 'lucide-react';
+import { LayoutDashboard, Users, Calendar, BookOpen, BarChart3, Settings, LogOut, ChevronLeft, ChevronRight, Bell } from 'lucide-react';
 import { Link, useLocation } from 'react-router-dom';
 import { cn } from '@/lib/utils';
 import { useState } from 'react';
+import { SAMPLE_NOTICES } from '@/lib/sample-data';
 
 interface SidebarProps {
   isOpen?: boolean;
@@ -14,6 +15,7 @@ const MENU_ITEMS = [
   { icon: Calendar, label: 'Attendance', path: '/attendance' },
   { icon: BookOpen, label: 'Assignments', path: '/assignments' },
   { icon: BarChart3, label: 'Analytics', path: '/analytics' },
+  { icon: Bell, label: 'Notices', path: '/notices', badge: SAMPLE_NOTICES.length },
 ];
 
 export function Sidebar({ isOpen = true, onToggle }: SidebarProps) {

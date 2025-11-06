@@ -293,12 +293,85 @@ export default function CreateAssignment() {
                 )}
               </div>
 
+              {/* Publication Status */}
+              <div className="border-t border-slate-200 pt-6">
+                <h2 className="text-lg font-semibold text-slate-900 mb-4">Publication Status</h2>
+                <div className="space-y-4">
+                  <div>
+                    <Label className="text-sm font-medium text-slate-700 block mb-3">Select Status</Label>
+                    <div className="flex flex-col gap-3">
+                      <label className="flex items-center gap-3 cursor-pointer">
+                        <input
+                          type="radio"
+                          name="status"
+                          value="draft"
+                          checked={formData.status === 'draft'}
+                          onChange={(e) => setFormData(prev => ({ ...prev, status: e.target.value as 'draft' | 'published' | 'scheduled' }))}
+                          className="w-4 h-4"
+                        />
+                        <div>
+                          <p className="text-sm font-medium text-slate-900">Save as Draft</p>
+                          <p className="text-xs text-slate-500">Assignment will be saved but not visible to students</p>
+                        </div>
+                      </label>
+                      <label className="flex items-center gap-3 cursor-pointer">
+                        <input
+                          type="radio"
+                          name="status"
+                          value="published"
+                          checked={formData.status === 'published'}
+                          onChange={(e) => setFormData(prev => ({ ...prev, status: e.target.value as 'draft' | 'published' | 'scheduled' }))}
+                          className="w-4 h-4"
+                        />
+                        <div>
+                          <p className="text-sm font-medium text-slate-900">Publish Now</p>
+                          <p className="text-xs text-slate-500">Assignment will be immediately visible to students</p>
+                        </div>
+                      </label>
+                      <label className="flex items-center gap-3 cursor-pointer">
+                        <input
+                          type="radio"
+                          name="status"
+                          value="scheduled"
+                          checked={formData.status === 'scheduled'}
+                          onChange={(e) => setFormData(prev => ({ ...prev, status: e.target.value as 'draft' | 'published' | 'scheduled' }))}
+                          className="w-4 h-4"
+                        />
+                        <div>
+                          <p className="text-sm font-medium text-slate-900">Schedule for Later</p>
+                          <p className="text-xs text-slate-500">Choose a date when assignment will be visible</p>
+                        </div>
+                      </label>
+                    </div>
+                  </div>
+
+                  {formData.status === 'scheduled' && (
+                    <div>
+                      <Label htmlFor="scheduledDate" className="text-sm font-medium text-slate-700">Scheduled Date *</Label>
+                      <Input
+                        id="scheduledDate"
+                        type="date"
+                        value={formData.scheduledDate}
+                        onChange={(e) => setFormData(prev => ({ ...prev, scheduledDate: e.target.value }))}
+                        className="mt-1 max-w-xs"
+                      />
+                    </div>
+                  )}
+                </div>
+              </div>
+
               {/* Action Buttons */}
               <div className="border-t border-slate-200 pt-6 flex gap-3 justify-end">
-                <Button variant="outline">Cancel</Button>
-                <Button variant="outline">Save as Draft</Button>
-                <Button variant="outline" className="text-primary-600">Schedule for Later</Button>
-                <Button className="bg-success-600 hover:bg-success-700 text-white">Publish Assignment</Button>
+                <Button variant="outline" asChild>
+                  <Link to="/assignments">Cancel</Link>
+                </Button>
+                <Button type="submit" className={
+                  formData.status === 'draft' ? 'bg-slate-600 hover:bg-slate-700' :
+                  formData.status === 'scheduled' ? 'bg-blue-600 hover:bg-blue-700' :
+                  'bg-primary-600 hover:bg-primary-700'
+                }>
+                  {formData.status === 'draft' ? 'Save as Draft' : formData.status === 'scheduled' ? 'Schedule Assignment' : 'Publish Assignment'}
+                </Button>
               </div>
             </form>
           </TabsContent>

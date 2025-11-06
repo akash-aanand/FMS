@@ -373,6 +373,120 @@ export default function Attendance() {
             </div>
           </div>
         )}
+
+        {/* Attendance Detail Modal */}
+        {showDetailModal && selectedStudent && (() => {
+          const student = SAMPLE_STUDENTS.find(s => s.id === selectedStudent);
+          if (!student) return null;
+
+          const records = attendanceRecords[selectedStudent] || [];
+          const daysInMonth = 30;
+          const presentCount = records.filter(r => r.status === 'present').length;
+          const absentCount = records.filter(r => r.status === 'absent').length;
+
+          return (
+            <div className="fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center p-4">
+              <div className="bg-white rounded-lg max-w-2xl w-full shadow-lg max-h-96 overflow-y-auto">
+                <div className="flex items-center justify-between p-6 border-b border-slate-200 sticky top-0 bg-white">
+                  <h2 className="text-lg font-semibold text-slate-900">Attendance Details - {student.name}</h2>
+                  <button
+                    onClick={() => setShowDetailModal(false)}
+                    className="text-slate-400 hover:text-slate-600"
+                  >
+                    <X className="h-5 w-5" />
+                  </button>
+                </div>
+
+                <div className="p-6">
+                  {/* Student Info */}
+                  <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-6">
+                    <div className="bg-slate-50 rounded-lg p-3">
+                      <p className="text-xs text-slate-600">Roll Number</p>
+                      <p className="text-sm font-semibold text-slate-900">{student.rollNumber}</p>
+                    </div>
+                    <div className="bg-slate-50 rounded-lg p-3">
+                      <p className="text-xs text-slate-600">Batch</p>
+                      <p className="text-sm font-semibold text-slate-900">{student.batch}</p>
+                    </div>
+                    <div className="bg-success-50 rounded-lg p-3">
+                      <p className="text-xs text-success-600 font-medium">Present</p>
+                      <p className="text-2xl font-bold text-success-600">{presentCount}</p>
+                    </div>
+                    <div className="bg-danger-50 rounded-lg p-3">
+                      <p className="text-xs text-danger-600 font-medium">Absent</p>
+                      <p className="text-2xl font-bold text-danger-600">{absentCount}</p>
+                    </div>
+                  </div>
+
+                  {/* 30-Day Grid */}
+                  <div>
+                    <h3 className="font-semibold text-slate-900 mb-4">Last 30 Days Attendance</h3>
+                    <div className="grid grid-cols-10 gap-2">
+                      {records.slice(0, daysInMonth).map((record, index) => {
+                        const date = new Date(record.date);
+                        const isPresent = record.status === 'present';
+                        return (
+                          <div
+                            key={index}
+                            className={cn(
+                              'p-2 rounded text-center text-xs font-semibold text-white cursor-pointer hover:shadow-md transition-shadow',
+                              isPresent ? 'bg-success-600 hover:bg-success-700' : 'bg-danger-600 hover:bg-danger-700'
+                            )}
+                            title={`${date.toLocaleDateString()}: ${isPresent ? 'Present' : 'Absent'}`}
+                          >
+                            <div className="font-bold">{date.getDate()}</div>
+                            <div className="text-xs">{isPresent ? '✓' : '✕'}</div>
+                          </div>
+                        );
+                      })}
+                    </div>
+                  </div>
+
+                  {/* Legend */}
+                  <div className="flex gap-6 mt-6 pt-6 border-t border-slate-200">
+                    <div className="flex items-center gap-2">
+                      <div className="w-4 h-4 rounded bg-success-600"></div>
+                      <span className="text-sm text-slate-700">Present</span>
+                    </div>
+                    <div className="flex items-center gap-2">
+                      <div className="w-4 h-4 rounded bg-danger-600"></div>
+                      <span className="text-sm text-slate-700">Absent</span>
+                    </div>
+                  </div>
+
+                  {/* Submission Status */}
+                  {submissionStatus[selectedStudent] && (
+                    <div className="mt-6 pt-6 border-t border-slate-200 bg-slate-50 p-4 rounded-lg">
+                      <div className="flex items-center justify-between">
+                        <div>
+                          <p className="text-sm font-medium text-slate-700">Submission Status</p>
+                          <p className="text-xs text-slate-600 mt-1">
+                            {submissionStatus[selectedStudent].submitted
+                              ? `Submitted on ${submissionStatus[selectedStudent].submittedAt}`
+                              : 'Not submitted (Draft)'}
+                          </p>
+                        </div>
+                        <span className={cn('px-3 py-1 rounded-full text-xs font-semibold',
+                          submissionStatus[selectedStudent].submitted
+                            ? 'bg-success-100 text-success-700'
+                            : 'bg-slate-200 text-slate-700'
+                        )}>
+                          {submissionStatus[selectedStudent].status}
+                        </span>
+                      </div>
+                    </div>
+                  )}
+                </div>
+
+                <div className="flex gap-3 justify-end p-6 border-t border-slate-200">
+                  <Button variant="outline" onClick={() => setShowDetailModal(false)}>
+                    Close
+                  </Button>
+                </div>
+              </div>
+            </div>
+          );
+        })()}
       </div>
     </MainLayout>
   );

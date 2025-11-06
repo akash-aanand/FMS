@@ -16,6 +16,7 @@ export default function TakeAttendance() {
   const [selectedSubject, setSelectedSubject] = useState('');
   const [attendanceMarks, setAttendanceMarks] = useState<Record<string, boolean>>({});
   const [notes, setNotes] = useState('');
+  const [searchTerm, setSearchTerm] = useState('');
 
   // Get students for selected batch
   const batchStudents = SAMPLE_STUDENTS.filter(s => s.batch === selectedBatch);

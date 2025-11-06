@@ -61,21 +61,29 @@ export function Sidebar({ isOpen = true, onToggle }: SidebarProps) {
         {MENU_ITEMS.map((item) => {
           const Icon = item.icon;
           const isActive = location.pathname === item.path;
+          const badge = (item as any).badge;
 
           return (
             <Link
               key={item.path}
               to={item.path}
               className={cn(
-                'flex items-center gap-3 px-4 py-3 rounded-lg transition-colors',
+                'flex items-center gap-3 px-4 py-3 rounded-lg transition-colors relative',
                 isActive
                   ? 'bg-primary-600 text-white'
                   : 'text-slate-300 hover:bg-slate-800 hover:text-white'
               )}
               title={collapsed ? item.label : undefined}
             >
-              <Icon className="h-5 w-5 flex-shrink-0" />
-              {!collapsed && <span className="text-sm font-medium">{item.label}</span>}
+              <div className="relative">
+                <Icon className="h-5 w-5 flex-shrink-0" />
+                {badge && badge > 0 && (
+                  <span className="absolute -top-2 -right-2 bg-danger-600 text-white text-xs font-bold rounded-full w-5 h-5 flex items-center justify-center">
+                    {badge > 99 ? '99+' : badge}
+                  </span>
+                )}
+              </div>
+              {!collapsed && <span className="text-sm font-medium flex-1">{item.label}</span>}
             </Link>
           );
         })}

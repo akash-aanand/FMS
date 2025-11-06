@@ -16,6 +16,9 @@ import Attendance from "./pages/Attendance";
 import TakeAttendance from "./pages/TakeAttendance";
 import Notices from "./pages/Notices";
 import Analytics from "./pages/Analytics";
+import Login from "./pages/Login";
+import { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
 
 const queryClient = new QueryClient();
 

@@ -209,22 +209,57 @@ export default function Assignments() {
                     </div>
                   </div>
 
+                  {/* Card Header Status Badge */}
+                  {assignment.status && (
+                    <div className="px-6 py-3 bg-slate-50 border-b border-slate-200">
+                      <div className="flex items-center gap-2">
+                        <span className={cn(
+                          'px-2 py-1 rounded-full text-xs font-semibold',
+                          assignment.status === 'draft' ? 'bg-slate-200 text-slate-700' :
+                          assignment.status === 'published' ? 'bg-success-100 text-success-700' :
+                          'bg-blue-100 text-blue-700'
+                        )}>
+                          {assignment.status.charAt(0).toUpperCase() + assignment.status.slice(1)}
+                        </span>
+                        {assignment.status === 'scheduled' && assignment.scheduledDate && (
+                          <span className="text-xs text-slate-600 flex items-center gap-1">
+                            <Calendar className="h-3 w-3" />
+                            {new Date(assignment.scheduledDate).toLocaleDateString()}
+                          </span>
+                        )}
+                      </div>
+                    </div>
+                  )}
+
                   {/* Card Footer - Actions */}
                   <div className="px-6 py-4 bg-slate-50 border-t border-slate-200 flex gap-2">
                     <Button
                       size="sm"
                       className="flex-1 bg-primary-600 hover:bg-primary-700 text-white"
+                      onClick={() => handleViewSubmissions(assignment)}
                     >
                       <Eye className="h-4 w-4 mr-1" />
                       View Submissions
                     </Button>
-                    <button className="p-2 hover:bg-slate-200 rounded-lg transition-colors" title="Edit">
+                    <button
+                      className="p-2 hover:bg-slate-200 rounded-lg transition-colors"
+                      title="Edit"
+                      onClick={() => handleEditAssignment(assignment)}
+                    >
                       <Edit className="h-4 w-4 text-slate-600" />
                     </button>
-                    <button className="p-2 hover:bg-slate-200 rounded-lg transition-colors" title="Download">
+                    <button
+                      className="p-2 hover:bg-slate-200 rounded-lg transition-colors"
+                      title="Download"
+                      onClick={() => handleDownloadAssignments(assignment)}
+                    >
                       <Download className="h-4 w-4 text-slate-600" />
                     </button>
-                    <button className="p-2 hover:bg-slate-200 rounded-lg transition-colors" title="Delete">
+                    <button
+                      className="p-2 hover:bg-slate-200 rounded-lg transition-colors"
+                      title="Delete"
+                      onClick={() => handleDeleteAssignment(assignment.id)}
+                    >
                       <Trash2 className="h-4 w-4 text-danger-600" />
                     </button>
                   </div>

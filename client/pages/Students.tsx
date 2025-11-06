@@ -313,6 +313,139 @@ export default function Students() {
             </div>
           )}
         </div>
+
+        {/* Add Student Modal */}
+        {showAddModal && (
+          <div className="fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center p-4">
+            <div className="bg-white rounded-lg max-w-md w-full shadow-lg">
+              <div className="flex items-center justify-between p-6 border-b border-slate-200">
+                <h2 className="text-lg font-semibold text-slate-900">Add New Student</h2>
+                <button
+                  onClick={() => setShowAddModal(false)}
+                  className="text-slate-400 hover:text-slate-600"
+                >
+                  <X className="h-5 w-5" />
+                </button>
+              </div>
+
+              <div className="p-6 space-y-4 max-h-96 overflow-y-auto">
+                <div>
+                  <label className="text-sm font-medium text-slate-700 block mb-1">Student Name *</label>
+                  <Input
+                    type="text"
+                    placeholder="Enter student name"
+                    value={newStudent.name || ''}
+                    onChange={(e) => setNewStudent({ ...newStudent, name: e.target.value })}
+                    className="h-10"
+                  />
+                </div>
+
+                <div>
+                  <label className="text-sm font-medium text-slate-700 block mb-1">Roll Number *</label>
+                  <Input
+                    type="text"
+                    placeholder="e.g., CS001"
+                    value={newStudent.rollNumber || ''}
+                    onChange={(e) => setNewStudent({ ...newStudent, rollNumber: e.target.value })}
+                    className="h-10"
+                  />
+                </div>
+
+                <div>
+                  <label className="text-sm font-medium text-slate-700 block mb-1">Branch</label>
+                  <Input
+                    type="text"
+                    placeholder="e.g., Computer Science"
+                    value={newStudent.branch || ''}
+                    onChange={(e) => setNewStudent({ ...newStudent, branch: e.target.value })}
+                    className="h-10"
+                  />
+                </div>
+
+                <div>
+                  <label className="text-sm font-medium text-slate-700 block mb-1">Semester</label>
+                  <Input
+                    type="text"
+                    placeholder="e.g., 3"
+                    value={newStudent.semester || ''}
+                    onChange={(e) => setNewStudent({ ...newStudent, semester: e.target.value })}
+                    className="h-10"
+                  />
+                </div>
+
+                <div>
+                  <label className="text-sm font-medium text-slate-700 block mb-1">Section</label>
+                  <Input
+                    type="text"
+                    placeholder="e.g., A"
+                    value={newStudent.section || ''}
+                    onChange={(e) => setNewStudent({ ...newStudent, section: e.target.value })}
+                    className="h-10"
+                  />
+                </div>
+
+                <div>
+                  <label className="text-sm font-medium text-slate-700 block mb-1">Father's Name</label>
+                  <Input
+                    type="text"
+                    placeholder="Enter father's name"
+                    value={newStudent.fathersName || ''}
+                    onChange={(e) => setNewStudent({ ...newStudent, fathersName: e.target.value })}
+                    className="h-10"
+                  />
+                </div>
+
+                <div>
+                  <label className="text-sm font-medium text-slate-700 block mb-1">Email *</label>
+                  <Input
+                    type="email"
+                    placeholder="student@college.edu"
+                    value={newStudent.email || ''}
+                    onChange={(e) => setNewStudent({ ...newStudent, email: e.target.value })}
+                    className="h-10"
+                  />
+                </div>
+
+                <div>
+                  <label className="text-sm font-medium text-slate-700 block mb-1">Phone *</label>
+                  <Input
+                    type="tel"
+                    placeholder="+91-9876543210"
+                    value={newStudent.phone || ''}
+                    onChange={(e) => setNewStudent({ ...newStudent, phone: e.target.value })}
+                    className="h-10"
+                  />
+                </div>
+
+                <div>
+                  <label className="text-sm font-medium text-slate-700 block mb-1">Batch</label>
+                  <Select value={newStudent.batch || 'CS-A'} onValueChange={(value) => setNewStudent({ ...newStudent, batch: value })}>
+                    <SelectTrigger className="h-10">
+                      <SelectValue />
+                    </SelectTrigger>
+                    <SelectContent>
+                      {BATCHES.map(batch => (
+                        <SelectItem key={batch} value={batch}>{batch}</SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                </div>
+              </div>
+
+              <div className="flex gap-3 justify-end p-6 border-t border-slate-200">
+                <Button variant="outline" onClick={() => setShowAddModal(false)}>
+                  Cancel
+                </Button>
+                <Button
+                  className="bg-primary-600 hover:bg-primary-700 text-white"
+                  onClick={handleAddStudent}
+                >
+                  Add Student
+                </Button>
+              </div>
+            </div>
+          </div>
+        )}
       </div>
     </MainLayout>
   );

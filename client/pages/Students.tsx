@@ -33,7 +33,7 @@ export default function Students() {
   const itemsPerPage = 10;
 
   const filteredStudents = useMemo(() => {
-    return SAMPLE_STUDENTS.filter(student => {
+    return students.filter(student => {
       const matchesSearch = 
         student.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
         student.rollNumber.toLowerCase().includes(searchTerm.toLowerCase());

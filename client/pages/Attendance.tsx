@@ -1,7 +1,7 @@
 import { MainLayout } from "@/components/layout/MainLayout";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
-import { Download, Plus } from "lucide-react";
+import { Download, Plus, X } from "lucide-react";
 import { SAMPLE_STUDENTS } from "@/lib/sample-data";
 import { useState, useMemo } from "react";
 import { cn } from "@/lib/utils";

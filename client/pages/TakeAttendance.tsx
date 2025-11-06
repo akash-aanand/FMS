@@ -48,8 +48,8 @@ export default function TakeAttendance() {
   const absentCount = filteredStudents.length - presentCount;
 
   const handleMarkAll = (present: boolean) => {
-    const newMarks: Record<string, boolean> = {};
-    batchStudents.forEach(student => {
+    const newMarks: Record<string, boolean> = { ...attendanceMarks };
+    filteredStudents.forEach(student => {
       newMarks[student.id] = present;
     });
     setAttendanceMarks(newMarks);

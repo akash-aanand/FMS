@@ -11,10 +11,25 @@ const BATCHES = ['All', 'CS-A', 'CS-B', 'CS-C'];
 const ATTENDANCE_FILTERS = ['All', 'Good', 'Low', 'At Risk'];
 
 export default function Students() {
+  const [students, setStudents] = useState(SAMPLE_STUDENTS);
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedBatch, setSelectedBatch] = useState('All');
   const [selectedAttendance, setSelectedAttendance] = useState('All');
   const [currentPage, setCurrentPage] = useState(1);
+  const [showAddModal, setShowAddModal] = useState(false);
+  const [newStudent, setNewStudent] = useState<Partial<Student>>({
+    name: '',
+    rollNumber: '',
+    batch: 'CS-A',
+    email: '',
+    phone: '',
+    branch: '',
+    semester: '',
+    section: '',
+    fathersName: '',
+    attendance: 75,
+    cgpa: 7.5,
+  });
   const itemsPerPage = 10;
 
   const filteredStudents = useMemo(() => {

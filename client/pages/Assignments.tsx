@@ -96,6 +96,8 @@ export default function Assignments() {
               <Input
                 type="search"
                 placeholder="Search assignments..."
+                value={searchTerm}
+                onChange={(e) => setSearchTerm(e.target.value)}
                 className="h-10"
               />
             </div>

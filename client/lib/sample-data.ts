@@ -8,6 +8,10 @@ export interface Student {
   photo?: string;
   attendance: number;
   cgpa: number;
+  branch?: string;
+  semester?: string;
+  section?: string;
+  fathersName?: string;
 }
 
 export interface Notice {
@@ -39,6 +43,8 @@ export interface Assignment {
   pending: number;
   overdue: number;
   totalStudents: number;
+  status?: 'draft' | 'published' | 'scheduled';
+  scheduledDate?: string;
 }
 
 // Sample Students

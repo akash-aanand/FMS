@@ -13,20 +13,27 @@ const BATCHES = ['All', 'CS-A', 'CS-B', 'CS-C'];
 const SUBJECTS = ['All', 'Data Structures', 'Web Development', 'Database Management'];
 
 export default function Assignments() {
+  const [assignments, setAssignments] = useState(SAMPLE_ASSIGNMENTS);
   const [filterStatus, setFilterStatus] = useState('All');
   const [selectedBatch, setSelectedBatch] = useState('All');
   const [selectedSubject, setSelectedSubject] = useState('All');
+  const [searchTerm, setSearchTerm] = useState('');
+  const [showEditModal, setShowEditModal] = useState(false);
+  const [showViewModal, setShowViewModal] = useState(false);
+  const [editingAssignment, setEditingAssignment] = useState<Assignment | null>(null);
+  const [viewingAssignment, setViewingAssignment] = useState<Assignment | null>(null);
 
-  const getProgressPercentage = (assignment: typeof SAMPLE_ASSIGNMENTS[0]) => {
+  const getProgressPercentage = (assignment: Assignment) => {
     return Math.round((assignment.submitted / assignment.totalStudents) * 100);
   };
 
-  const filteredAssignments = SAMPLE_ASSIGNMENTS.filter(assignment => {
+  const filteredAssignments = assignments.filter(assignment => {
+    const matchesSearch = assignment.title.toLowerCase().includes(searchTerm.toLowerCase());
     if (selectedBatch !== 'All' && assignment.batch !== selectedBatch) return false;
     if (selectedSubject !== 'All' && assignment.subject !== selectedSubject) return false;
     if (filterStatus === 'Overdue' && assignment.overdue === 0) return false;
     if (filterStatus === 'Completed' && assignment.pending > 0) return false;
-    return true;
+    return matchesSearch;
   });
 
   return (

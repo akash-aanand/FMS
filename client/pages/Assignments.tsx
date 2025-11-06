@@ -37,10 +37,7 @@ export default function Assignments() {
   });
 
   const handleDeleteAssignment = (id: string) => {
-    if (confirm('Are you sure you want to delete this assignment?')) {
-      setAssignments(assignments.filter(a => a.id !== id));
-      alert('Assignment deleted successfully!');
-    }
+    setAssignments(assignments.filter(a => a.id !== id));
   };
 
   const handleDownloadAssignments = (assignment: Assignment) => {

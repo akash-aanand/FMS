@@ -60,15 +60,7 @@ export function App() {
             <Route path="/attendance/new" element={<TakeAttendance />} />
 
             {/* Analytics Route */}
-            <Route
-              path="/analytics"
-              element={
-                <Placeholder
-                  title="Attendance Analytics Dashboard"
-                  feature="analytics"
-                />
-              }
-            />
+            <Route path="/analytics" element={<Analytics />} />
 
             {/* Other Routes */}
             <Route

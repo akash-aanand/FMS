@@ -12,6 +12,7 @@ import { useState } from 'react';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 
 export default function CreateAssignment() {
+  const navigate = useNavigate();
   const [formData, setFormData] = useState({
     title: '',
     description: '',
@@ -25,6 +26,8 @@ export default function CreateAssignment() {
     instructions: '',
     enableLateSubmission: false,
     latePenalty: '',
+    status: 'published' as 'draft' | 'published' | 'scheduled',
+    scheduledDate: '',
   });
 
   const [uploadedFiles, setUploadedFiles] = useState<File[]>([]);
@@ -52,8 +55,9 @@ export default function CreateAssignment() {
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    // Handle form submission
     console.log('Form submitted:', { ...formData, files: uploadedFiles });
+    alert(`Assignment ${formData.status === 'draft' ? 'saved as draft' : formData.status === 'scheduled' ? 'scheduled' : 'published'} successfully!`);
+    navigate('/assignments');
   };
 
   return (

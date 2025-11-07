@@ -13,7 +13,11 @@ const BATCHES = ['All', 'CS-A', 'CS-B', 'CS-C'];
 const SUBJECTS = ['All', 'Data Structures', 'Web Development', 'Database Management'];
 
 export default function Assignments() {
-  const [assignments, setAssignments] = useState(SAMPLE_ASSIGNMENTS);
+  // Initialize assignments from localStorage or use sample data
+  const [assignments, setAssignments] = useState<Assignment[]>(() => {
+    const saved = localStorage.getItem('assignments');
+    return saved ? JSON.parse(saved) : SAMPLE_ASSIGNMENTS;
+  });
   const [filterStatus, setFilterStatus] = useState('All');
   const [selectedBatch, setSelectedBatch] = useState('All');
   const [selectedSubject, setSelectedSubject] = useState('All');
@@ -22,6 +26,12 @@ export default function Assignments() {
   const [showViewModal, setShowViewModal] = useState(false);
   const [editingAssignment, setEditingAssignment] = useState<Assignment | null>(null);
   const [viewingAssignment, setViewingAssignment] = useState<Assignment | null>(null);
+
+  // Save assignments to localStorage whenever they change
+  const updateAssignments = (newAssignments: Assignment[]) => {
+    setAssignments(newAssignments);
+    localStorage.setItem('assignments', JSON.stringify(newAssignments));
+  };
 
   const getProgressPercentage = (assignment: Assignment) => {
     return Math.round((assignment.submitted / assignment.totalStudents) * 100);

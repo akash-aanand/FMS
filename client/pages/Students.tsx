@@ -92,6 +92,10 @@ export default function Students() {
 
     setStudents([...students, student]);
     setShowAddModal(false);
+    setCurrentPage(1);
+    setSearchTerm('');
+    setSelectedBatch('All');
+    setSelectedAttendance('All');
     setNewStudent({
       name: '',
       rollNumber: '',
@@ -105,6 +109,11 @@ export default function Students() {
       attendance: 75,
       cgpa: 7.5,
     });
+    // Show success message
+    const event = new CustomEvent('studentAdded', {
+      detail: { studentName: student.name }
+    });
+    window.dispatchEvent(event);
   };
 
   const handleExportCSV = () => {

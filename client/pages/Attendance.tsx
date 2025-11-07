@@ -456,23 +456,42 @@ export default function Attendance() {
 
                   {/* Submission Status */}
                   {submissionStatus[selectedStudent] && (
-                    <div className="mt-6 pt-6 border-t border-slate-200 bg-slate-50 p-4 rounded-lg">
-                      <div className="flex items-center justify-between">
-                        <div>
-                          <p className="text-sm font-medium text-slate-700">Submission Status</p>
-                          <p className="text-xs text-slate-600 mt-1">
-                            {submissionStatus[selectedStudent].submitted
-                              ? `Submitted on ${submissionStatus[selectedStudent].submittedAt}`
-                              : 'Not submitted (Draft)'}
+                    <div className="mt-6 pt-6 border-t border-slate-200">
+                      <h3 className="font-semibold text-slate-900 mb-4">Attendance Submission Details</h3>
+                      <div className="space-y-3">
+                        {/* Student Submission Status */}
+                        <div className="bg-slate-50 p-4 rounded-lg">
+                          <p className="text-sm font-medium text-slate-700 mb-2">Student Submission Status</p>
+                          <div className="flex items-center justify-between">
+                            <div>
+                              <p className="text-xs text-slate-600">
+                                {submissionStatus[selectedStudent].submitted
+                                  ? `✓ Submitted`
+                                  : '✗ Not Submitted (Draft)'}
+                              </p>
+                              {submissionStatus[selectedStudent].submitted && submissionStatus[selectedStudent].submittedAt && (
+                                <p className="text-xs text-slate-500 mt-1">
+                                  Submitted at: {submissionStatus[selectedStudent].submittedAt}
+                                </p>
+                              )}
+                            </div>
+                            <span className={cn('px-3 py-1 rounded-full text-xs font-semibold',
+                              submissionStatus[selectedStudent].submitted
+                                ? 'bg-success-100 text-success-700'
+                                : 'bg-slate-200 text-slate-700'
+                            )}>
+                              {submissionStatus[selectedStudent].status}
+                            </span>
+                          </div>
+                        </div>
+
+                        {/* Teacher Submission (for marking attendance) */}
+                        <div className="bg-blue-50 p-4 rounded-lg border border-blue-200">
+                          <p className="text-sm font-medium text-blue-900 mb-2">Attendance Marked By Teacher</p>
+                          <p className="text-xs text-blue-700">
+                            Teacher submitted attendance record on {new Date().toLocaleDateString()} at {new Date().toLocaleTimeString()}
                           </p>
                         </div>
-                        <span className={cn('px-3 py-1 rounded-full text-xs font-semibold',
-                          submissionStatus[selectedStudent].submitted
-                            ? 'bg-success-100 text-success-700'
-                            : 'bg-slate-200 text-slate-700'
-                        )}>
-                          {submissionStatus[selectedStudent].status}
-                        </span>
                       </div>
                     </div>
                   )}

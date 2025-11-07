@@ -47,7 +47,7 @@ export default function Assignments() {
   });
 
   const handleDeleteAssignment = (id: string) => {
-    setAssignments(assignments.filter(a => a.id !== id));
+    updateAssignments(assignments.filter(a => a.id !== id));
   };
 
   const handleDownloadAssignments = (assignment: Assignment) => {
@@ -68,7 +68,7 @@ export default function Assignments() {
 
   const handleSaveAssignment = () => {
     if (!editingAssignment) return;
-    setAssignments(assignments.map(a => a.id === editingAssignment.id ? editingAssignment : a));
+    updateAssignments(assignments.map(a => a.id === editingAssignment.id ? editingAssignment : a));
     setShowEditModal(false);
     setEditingAssignment(null);
     alert('Assignment updated successfully!');

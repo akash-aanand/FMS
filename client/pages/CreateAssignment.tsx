@@ -55,7 +55,42 @@ export default function CreateAssignment() {
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    console.log('Form submitted:', { ...formData, files: uploadedFiles });
+
+    // Validate required fields
+    if (!formData.title || !formData.subject || !formData.dueDate || !formData.batches.length) {
+      alert('Please fill in all required fields');
+      return;
+    }
+
+    if (formData.status === 'scheduled' && !formData.scheduledDate) {
+      alert('Please select a scheduled date');
+      return;
+    }
+
+    // Create new assignment
+    const newAssignment = {
+      id: Date.now().toString(),
+      title: formData.title,
+      subject: formData.subject,
+      batch: formData.batches.join(', '),
+      dueDate: formData.dueDate,
+      totalMarks: parseInt(formData.totalMarks) || 100,
+      submitted: 0,
+      pending: 0,
+      overdue: 0,
+      totalStudents: 0,
+      status: formData.status as 'draft' | 'published' | 'scheduled',
+      scheduledDate: formData.status === 'scheduled' ? formData.scheduledDate : undefined,
+    };
+
+    // Get existing assignments from localStorage
+    const existingAssignments = localStorage.getItem('assignments');
+    const assignments = existingAssignments ? JSON.parse(existingAssignments) : [];
+
+    // Add new assignment
+    const updatedAssignments = [...assignments, newAssignment];
+    localStorage.setItem('assignments', JSON.stringify(updatedAssignments));
+
     alert(`Assignment ${formData.status === 'draft' ? 'saved as draft' : formData.status === 'scheduled' ? 'scheduled' : 'published'} successfully!`);
     navigate('/assignments');
   };

@@ -48,50 +48,50 @@ export function App() {
             <Route path="/" element={<ProtectedRoute element={<Index />} />} />
 
             {/* Students Routes */}
-            <Route path="/students" element={<Students />} />
+            <Route path="/students" element={<ProtectedRoute element={<Students />} />} />
             <Route
               path="/students/:id"
               element={
-                <Placeholder title="Student Profile" feature="studentProfile" />
+                <ProtectedRoute element={<Placeholder title="Student Profile" feature="studentProfile" />} />
               }
             />
 
             {/* Assignment Routes */}
-            <Route path="/assignments" element={<Assignments />} />
-            <Route path="/assignments/create" element={<CreateAssignment />} />
+            <Route path="/assignments" element={<ProtectedRoute element={<Assignments />} />} />
+            <Route path="/assignments/create" element={<ProtectedRoute element={<CreateAssignment />} />} />
             <Route
               path="/assignments/:assignmentId/submissions"
-              element={<AssignmentSubmissions />}
+              element={<ProtectedRoute element={<AssignmentSubmissions />} />}
             />
             <Route
               path="/assignments/:id"
               element={
-                <Placeholder
+                <ProtectedRoute element={<Placeholder
                   title="Assignment Details"
                   feature="assignmentDetails"
-                />
+                />} />
               }
             />
 
             {/* Attendance Routes */}
-            <Route path="/attendance" element={<Attendance />} />
-            <Route path="/attendance/new" element={<TakeAttendance />} />
+            <Route path="/attendance" element={<ProtectedRoute element={<Attendance />} />} />
+            <Route path="/attendance/new" element={<ProtectedRoute element={<TakeAttendance />} />} />
 
             {/* Analytics Route */}
-            <Route path="/analytics" element={<Analytics />} />
+            <Route path="/analytics" element={<ProtectedRoute element={<Analytics />} />} />
 
             {/* Other Routes */}
             <Route
               path="/timetable"
               element={
-                <Placeholder title="Weekly Timetable" feature="timetable" />
+                <ProtectedRoute element={<Placeholder title="Weekly Timetable" feature="timetable" />} />
               }
             />
-            <Route path="/notices" element={<Notices />} />
+            <Route path="/notices" element={<ProtectedRoute element={<Notices />} />} />
             <Route
               path="/submissions"
               element={
-                <Placeholder title="Submission Queue" feature="submissions" />
+                <ProtectedRoute element={<Placeholder title="Submission Queue" feature="submissions" />} />
               }
             />
 

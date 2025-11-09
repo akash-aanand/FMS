@@ -4,7 +4,7 @@ import { Button } from '@/components/ui/button';
 import { Download, Plus, MoreVertical, Eye, Edit, MessageCircle, X } from 'lucide-react';
 import { SAMPLE_STUDENTS, Student } from '@/lib/sample-data';
 import { useState, useMemo } from 'react';
-import { cn } from '@/lib/utils';
+import { cn, robustSearch } from '@/lib/utils';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 
 const BATCHES = ['All', 'CS-A', 'CS-B', 'CS-C'];
@@ -34,9 +34,11 @@ export default function Students() {
 
   const filteredStudents = useMemo(() => {
     return students.filter(student => {
-      const matchesSearch = 
-        student.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        student.rollNumber.toLowerCase().includes(searchTerm.toLowerCase());
+      const matchesSearch = robustSearch(searchTerm, [
+        student.name,
+        student.rollNumber,
+        student.email,
+      ]);
       
       const matchesBatch = selectedBatch === 'All' || student.batch === selectedBatch;
       
@@ -49,7 +51,7 @@ export default function Students() {
 
       return matchesSearch && matchesBatch && matchesAttendance;
     });
-  }, [searchTerm, selectedBatch, selectedAttendance]);
+  }, [students, searchTerm, selectedBatch, selectedAttendance]);
 
   const totalPages = Math.ceil(filteredStudents.length / itemsPerPage);
   const paginatedStudents = filteredStudents.slice(

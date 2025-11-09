@@ -4,7 +4,7 @@ import { Button } from "@/components/ui/button";
 import { Download, Plus, X } from "lucide-react";
 import { SAMPLE_STUDENTS } from "@/lib/sample-data";
 import { useState, useMemo } from "react";
-import { cn } from "@/lib/utils";
+import { cn, robustSearch } from "@/lib/utils";
 import {
   Select,
   SelectContent,
@@ -16,6 +16,8 @@ import { Progress } from "@/components/ui/progress";
 import { Link } from "react-router-dom";
 
 const BATCHES = ["All", "CS-A", "CS-B", "CS-C"];
+const SEMESTERS = ["All", "3", "5", "7"]; // Added
+const SECTIONS = ["All", "A", "B", "C"]; // Added
 
 // Generate mock attendance records
 const generateAttendanceRecords = () => {
@@ -43,6 +45,8 @@ const generateAttendanceRecords = () => {
 export default function Attendance() {
   const [selectedBatch, setSelectedBatch] = useState("All");
   const [searchTerm, setSearchTerm] = useState("");
+  const [selectedSemester, setSelectedSemester] = useState("All");
+  const [selectedSection, setSelectedSection] = useState("All");
   const [attendanceRecords] = useState(generateAttendanceRecords());
   const [currentPage, setCurrentPage] = useState(1);
   const [selectedStudent, setSelectedStudent] = useState<string | null>(null);
@@ -58,16 +62,23 @@ export default function Attendance() {
 
   const filteredStudents = useMemo(() => {
     return SAMPLE_STUDENTS.filter((student) => {
-      const matchesSearch =
-        student.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        student.rollNumber.toLowerCase().includes(searchTerm.toLowerCase());
+      const matchesSearch = robustSearch(searchTerm, [
+        student.name,
+        student.rollNumber,
+      ]);
 
       const matchesBatch =
         selectedBatch === "All" || student.batch === selectedBatch;
+      
+      const matchesSemester =
+        selectedSemester === "All" || student.semester === selectedSemester;
+      
+      const matchesSection =
+        selectedSection === "All" || student.section === selectedSection;
 
-      return matchesSearch && matchesBatch;
+      return matchesSearch && matchesBatch && matchesSemester && matchesSection;
     });
-  }, [searchTerm, selectedBatch]);
+  }, [searchTerm, selectedBatch, selectedSemester, selectedSection]);
 
   const totalPages = Math.ceil(filteredStudents.length / itemsPerPage);
   const paginatedStudents = filteredStudents.slice(
@@ -93,6 +104,8 @@ export default function Attendance() {
         "Roll Number",
         "Student Name",
         "Batch",
+        "Semester",
+        "Section",
         "Overall Attendance %",
         "Status",
       ];
@@ -100,6 +113,8 @@ export default function Attendance() {
         student.rollNumber,
         student.name,
         student.batch,
+        student.semester || '-',
+        student.section || '-',
         student.attendance,
         student.attendance >= 75
           ? "Good"
@@ -178,7 +193,8 @@ export default function Attendance() {
                 }}
               />
             </div>
-            <Select
+            <div className="flex flex-col sm:flex-row gap-4">
+              <Select
               value={selectedBatch}
               onValueChange={(value) => {
                 setSelectedBatch(value);
@@ -195,7 +211,46 @@ export default function Attendance() {
                   </SelectItem>
                 ))}
               </SelectContent>
-            </Select>
+              </Select>
+
+              <Select
+                value={selectedSemester}
+                onValueChange={(value) => {
+                  setSelectedSemester(value);
+                  setCurrentPage(1);
+                }}
+              >
+                <SelectTrigger className="w-40">
+                  <SelectValue />
+                </SelectTrigger>
+                <SelectContent>
+                  {SEMESTERS.map((semester) => (
+                    <SelectItem key={semester} value={semester}>
+                      {semester === "All" ? "All Semesters" : `${semester} Sem`}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+
+              <Select
+                value={selectedSection}
+                onValueChange={(value) => {
+                  setSelectedSection(value);
+                  setCurrentPage(1);
+                }}
+              >
+                <SelectTrigger className="w-40">
+                  <SelectValue />
+                </SelectTrigger>
+                <SelectContent>
+                  {SECTIONS.map((section) => (
+                    <SelectItem key={section} value={section}>
+                      {section === "All" ? "All Sections" : `Section ${section}`}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            </div>
           </div>
         </div>
 
@@ -227,8 +282,8 @@ export default function Attendance() {
                     </div>
                   </div>
                   <div className="flex flex-col items-end gap-2">
-                    <span className={cn('px-3 py-1 rounded-full text-xs font-semibold', submissionStatus[student.id]?.submitted ? 'bg-success-100 text-success-700' : 'bg-slate-100 text-slate-700')}>
-                      {submissionStatus[student.id]?.submitted ? 'Submitted' : 'Draft'}
+                    <span className={cn('px-3 py-1 rounded-full text-xs font-semibold', (submissionStatus[student.id] || {submitted: false}).submitted ? 'bg-success-100 text-success-700' : 'bg-slate-100 text-slate-700')}>
+                      {(submissionStatus[student.id] || {submitted: false}).submitted ? 'Submitted' : 'Draft'}
                     </span>
                     <button
                       onClick={() => {
@@ -386,7 +441,7 @@ export default function Attendance() {
 
           return (
             <div className="fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center p-4">
-              <div className="bg-white rounded-lg max-w-2xl w-full shadow-lg max-h-96 overflow-y-auto">
+              <div className="bg-white rounded-lg max-w-2xl w-full shadow-lg max-h-[90vh] overflow-y-auto">
                 <div className="flex items-center justify-between p-6 border-b border-slate-200 sticky top-0 bg-white">
                   <h2 className="text-lg font-semibold text-slate-900">Attendance Details - {student.name}</h2>
                   <button

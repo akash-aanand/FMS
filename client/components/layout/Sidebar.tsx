@@ -1,64 +1,64 @@
 import { LayoutDashboard, Users, Calendar, BookOpen, BarChart3, Settings, LogOut, ChevronLeft, ChevronRight, Bell } from 'lucide-react';
 import { Link, useLocation } from 'react-router-dom';
 import { cn } from '@/lib/utils';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { SAMPLE_NOTICES } from '@/lib/sample-data';
+import { Sheet, SheetContent } from '@/components/ui/sheet';
 
 interface SidebarProps {
-  isOpen?: boolean;
-  onToggle?: (open: boolean) => void;
+  isOpen: boolean;
+  onToggle: (open: boolean) => void;
+  isMobile: boolean;
 }
 
-const MENU_ITEMS = [
+const MENU_ITEMS_BASE = [
   { icon: LayoutDashboard, label: 'Dashboard', path: '/' },
   { icon: Users, label: 'Manage Students', path: '/students' },
   { icon: Calendar, label: 'Attendance', path: '/attendance' },
   { icon: BookOpen, label: 'Assignments', path: '/assignments' },
   { icon: BarChart3, label: 'Analytics', path: '/analytics' },
-  { icon: Bell, label: 'Notices', path: '/notices', badge: SAMPLE_NOTICES.length },
+  { icon: Bell, label: 'Notices', path: '/notices' }, // Badge removed here, will be added dynamically
 ];
 
-export function Sidebar({ isOpen = true, onToggle }: SidebarProps) {
-  const [collapsed, setCollapsed] = useState(!isOpen);
+function SidebarNav({ collapsed }: { collapsed: boolean }) {
   const location = useLocation();
+  const [unseenNotices, setUnseenNotices] = useState(() => {
+    const savedCount = localStorage.getItem('unseenNoticesCount');
+    return savedCount ? parseInt(savedCount, 10) : SAMPLE_NOTICES.length;
+  });
 
-  const handleToggle = () => {
-    setCollapsed(!collapsed);
-    onToggle?.(!collapsed);
-  };
+  useEffect(() => {
+    const handleNoticesSeen = () => {
+      setUnseenNotices(0);
+      localStorage.setItem('unseenNoticesCount', '0');
+    };
+
+    window.addEventListener('noticesSeen', handleNoticesSeen);
+    
+    // Sync on load
+    const savedCount = localStorage.getItem('unseenNoticesCount');
+    if (savedCount) {
+      setUnseenNotices(parseInt(savedCount, 10));
+    }
+
+    return () => {
+      window.removeEventListener('noticesSeen', handleNoticesSeen);
+    };
+  }, []);
+
+  // Create dynamic menu items
+  const menuItems = MENU_ITEMS_BASE.map(item => {
+    if (item.path === '/notices') {
+      return { ...item, badge: unseenNotices };
+    }
+    return item;
+  });
 
   return (
-    <aside
-      className={cn(
-        'fixed left-0 top-0 h-screen bg-slate-900 text-white transition-all duration-300 z-40',
-        collapsed ? 'w-20' : 'w-64'
-      )}
-    >
-      {/* Header Section */}
-      <div className="border-b border-slate-800 p-4">
-        <div className="flex items-center justify-between">
-          {!collapsed && (
-            <div>
-              <p className="font-semibold text-sm">Dr. Eleanor Vance</p>
-              <p className="text-xs text-slate-400">Computer Science</p>
-            </div>
-          )}
-          <button
-            onClick={handleToggle}
-            className="p-1.5 rounded-lg hover:bg-slate-800 transition-colors"
-          >
-            {collapsed ? (
-              <ChevronRight className="h-4 w-4" />
-            ) : (
-              <ChevronLeft className="h-4 w-4" />
-            )}
-          </button>
-        </div>
-      </div>
-
+    <>
       {/* Navigation Menu */}
       <nav className="p-4 space-y-2">
-        {MENU_ITEMS.map((item) => {
+        {menuItems.map((item) => {
           const Icon = item.icon;
           const isActive = location.pathname === item.path;
           const badge = (item as any).badge;
@@ -115,6 +115,70 @@ export function Sidebar({ isOpen = true, onToggle }: SidebarProps) {
           {!collapsed && <span className="text-sm font-medium">Logout</span>}
         </button>
       </div>
+    </>
+  );
+}
+
+export function Sidebar({ isOpen, onToggle, isMobile }: SidebarProps) {
+  // On desktop, `isOpen` controls the expanded state.
+  // On mobile, `isOpen` controls the sheet's open state.
+  
+  const collapsed = !isOpen; // For desktop
+
+  const handleDesktopToggle = () => {
+    onToggle(!isOpen); // Invert parent state
+  };
+
+  if (isMobile) {
+    return (
+      <Sheet open={isOpen} onOpenChange={onToggle}>
+        <SheetContent side="left" className="bg-slate-900 text-white p-0 w-64 border-r-0">
+          {/* Mobile Header Section */}
+          <div className="border-b border-slate-800 p-4">
+            <div className="flex items-center justify-between">
+              <div>
+                <p className="font-semibold text-sm">Dr. Eleanor Vance</p>
+                <p className="text-xs text-slate-400">Computer Science</p>
+              </div>
+            </div>
+          </div>
+          <SidebarNav collapsed={false} />
+        </SheetContent>
+      </Sheet>
+    );
+  }
+
+  return (
+    // Desktop
+    <aside
+      className={cn(
+        'fixed left-0 top-0 h-screen bg-slate-900 text-white transition-all duration-300 z-40',
+        collapsed ? 'w-20' : 'w-64'
+      )}
+    >
+      {/* Header Section */}
+      <div className="border-b border-slate-800 p-4 h-20 flex items-center justify-between">
+          {!collapsed && (
+            <div>
+              <p className="font-semibold text-sm">Dr. Eleanor Vance</p>
+              <p className="text-xs text-slate-400">Computer Science</p>
+            </div>
+          )}
+          <button
+            onClick={handleDesktopToggle}
+            className={cn(
+              "p-1.5 rounded-lg hover:bg-slate-800 transition-colors",
+              collapsed && "mx-auto" // Center button when collapsed
+            )}
+          >
+            {collapsed ? (
+              <ChevronRight className="h-4 w-4" />
+            ) : (
+              <ChevronLeft className="h-4 w-4" />
+            )}
+          </button>
+      </div>
+      <SidebarNav collapsed={collapsed} />
     </aside>
   );
 }

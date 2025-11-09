@@ -20,14 +20,20 @@ export default function Login() {
 
     // Simulate authentication delay
     setTimeout(() => {
-      // Simple validation - any non-empty email and password works for demo
-      if (credentials.email && credentials.password) {
+      // --- FIX: Check for the specific demo email and any password ---
+      if (
+        credentials.email === 'teacher@college.edu' &&
+        credentials.password
+      ) {
         localStorage.setItem('isLoggedIn', 'true');
         localStorage.setItem('userEmail', credentials.email);
         navigate('/');
-      } else {
+      } else if (!credentials.email || !credentials.password) {
         setError('Please enter both email and password');
+      } else {
+        setError('Invalid email. Please use the demo credentials.');
       }
+      // --- END FIX ---
       setIsLoading(false);
     }, 500);
   };

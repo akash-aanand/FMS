@@ -6,7 +6,7 @@ import { useState } from 'react';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Link } from 'react-router-dom';
 import { Input } from '@/components/ui/input';
-import { cn } from '@/lib/utils';
+import { cn, robustSearch } from '@/lib/utils';
 
 const FILTER_OPTIONS = ['All', 'Active', 'Completed', 'Overdue'];
 const BATCHES = ['All', 'CS-A', 'CS-B', 'CS-C'];
@@ -38,8 +38,12 @@ export default function Assignments() {
   };
 
   const filteredAssignments = assignments.filter(assignment => {
-    const matchesSearch = assignment.title.toLowerCase().includes(searchTerm.toLowerCase());
-    if (selectedBatch !== 'All' && assignment.batch !== selectedBatch) return false;
+    const matchesSearch = robustSearch(searchTerm, [
+      assignment.title,
+      assignment.subject,
+      assignment.batch,
+    ]);
+    if (selectedBatch !== 'All' && !assignment.batch.includes(selectedBatch)) return false;
     if (selectedSubject !== 'All' && assignment.subject !== selectedSubject) return false;
     if (filterStatus === 'Overdue' && assignment.overdue === 0) return false;
     if (filterStatus === 'Completed' && assignment.pending > 0) return false;
@@ -243,10 +247,12 @@ export default function Assignments() {
                     <Button
                       size="sm"
                       className="flex-1 bg-primary-600 hover:bg-primary-700 text-white"
-                      onClick={() => handleViewSubmissions(assignment)}
+                      asChild
                     >
-                      <Eye className="h-4 w-4 mr-1" />
-                      View Submissions
+                      <Link to={`/assignments/${assignment.id}/submissions`}>
+                        <Eye className="h-4 w-4 mr-1" />
+                        View Submissions
+                      </Link>
                     </Button>
                     <button
                       className="p-2 hover:bg-slate-200 rounded-lg transition-colors"
@@ -283,7 +289,7 @@ export default function Assignments() {
         {/* View Submissions Modal */}
         {showViewModal && viewingAssignment && (
           <div className="fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center p-4">
-            <div className="bg-white rounded-lg max-w-2xl w-full shadow-lg max-h-96 overflow-y-auto">
+            <div className="bg-white rounded-lg max-w-2xl w-full shadow-lg max-h-[90vh] overflow-y-auto">
               <div className="flex items-center justify-between p-6 border-b border-slate-200 sticky top-0 bg-white">
                 <h2 className="text-lg font-semibold text-slate-900">View Submissions - {viewingAssignment.title}</h2>
                 <button
@@ -328,6 +334,11 @@ export default function Assignments() {
                 <Button variant="outline" onClick={() => setShowViewModal(false)}>
                   Close
                 </Button>
+                <Button asChild className="bg-primary-600 hover:bg-primary-700">
+                  <Link to={`/assignments/${viewingAssignment.id}/submissions`}>
+                    Go to Submissions Page
+                  </Link>
+                </Button>
               </div>
             </div>
           </div>
@@ -336,7 +347,7 @@ export default function Assignments() {
         {/* Edit Assignment Modal */}
         {showEditModal && editingAssignment && (
           <div className="fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center p-4">
-            <div className="bg-white rounded-lg max-w-2xl w-full shadow-lg max-h-96 overflow-y-auto">
+            <div className="bg-white rounded-lg max-w-2xl w-full shadow-lg max-h-[90vh] overflow-y-auto">
               <div className="flex items-center justify-between p-6 border-b border-slate-200 sticky top-0 bg-white">
                 <h2 className="text-lg font-semibold text-slate-900">Edit Assignment</h2>
                 <button

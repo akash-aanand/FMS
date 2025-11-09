@@ -42,7 +42,7 @@ export function App() {
         <BrowserRouter>
           <Routes>
             {/* Login Route */}
-            <Route path="/login" element={<Login />} />
+            {/* <Route path="/login" element={<Login />} /> */}
 
             {/* Protected Routes */}
             <Route path="/" element={<ProtectedRoute element={<Index />} />} />

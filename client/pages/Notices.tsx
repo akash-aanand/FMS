@@ -1,8 +1,8 @@
 import { MainLayout } from '@/components/layout/MainLayout';
 import { SAMPLE_NOTICES } from '@/lib/sample-data';
 import { AlertCircle, Zap, Info } from 'lucide-react';
-import { useState, useMemo } from 'react';
-import { cn } from '@/lib/utils';
+import { useState, useMemo, useEffect } from 'react';
+import { cn, robustSearch } from '@/lib/utils';
 import { Input } from '@/components/ui/input';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 
@@ -14,13 +14,21 @@ export default function Notices() {
   const [selectedPriority, setSelectedPriority] = useState('All');
   const [searchTerm, setSearchTerm] = useState('');
 
+  useEffect(() => {
+    // Mark as read
+    localStorage.setItem('unseenNoticesCount', '0');
+    window.dispatchEvent(new CustomEvent('noticesSeen'));
+  }, []);
+
   const filteredNotices = useMemo(() => {
     return SAMPLE_NOTICES.filter(notice => {
       const matchesCategory = selectedCategory === 'All' || notice.category === selectedCategory;
       const matchesPriority = selectedPriority === 'All' || notice.priority === selectedPriority;
-      const matchesSearch = 
-        notice.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        notice.content.toLowerCase().includes(searchTerm.toLowerCase());
+      const matchesSearch = robustSearch(searchTerm, [
+        notice.title,
+        notice.content,
+        notice.category,
+      ]);
       return matchesCategory && matchesPriority && matchesSearch;
     });
   }, [selectedCategory, selectedPriority, searchTerm]);

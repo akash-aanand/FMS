@@ -11,73 +11,50 @@ import {
 import { SAMPLE_STUDENTS, SAMPLE_ASSIGNMENTS } from "@/lib/sample-data";
 import { useParams, Link } from "react-router-dom";
 import { cn } from "@/lib/utils";
-import { useState } from "react";
+import { useState, useMemo } from "react";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { Label } from "@/components/ui/label";
+import { Input } from "@/components/ui/input";
+import { Textarea } from "@/components/ui/textarea";
 
 // Mock submission data
 const generateSubmissionData = (assignment: (typeof SAMPLE_ASSIGNMENTS)[0]) => {
-  const submissions = [];
+  const studentsInBatch = SAMPLE_STUDENTS.filter(s => assignment.batch.includes(s.batch));
+  const submissions: any[] = [];
+  const dueDate = new Date(assignment.dueDate);
 
-  // Submitted students
-  for (let i = 0; i < assignment.submitted; i++) {
-    const student = SAMPLE_STUDENTS[i % SAMPLE_STUDENTS.length];
+  studentsInBatch.forEach((student, index) => {
+    // Determine status based on index for demo data
+    const totalSubmitted = assignment.submitted;
+    const totalOverdue = assignment.overdue;
+    
+    let status: "submitted" | "overdue" | "pending";
+    let submissionDate: string | null = null;
+
+    if (index < totalSubmitted) {
+      status = "submitted";
+      submissionDate = new Date(dueDate.getTime() - Math.random() * 2 * 24 * 60 * 60 * 1000).toLocaleDateString();
+    } else if (index < totalSubmitted + totalOverdue) {
+      status = "overdue";
+      submissionDate = new Date(dueDate.getTime() + Math.random() * 2 * 24 * 60 * 60 * 1000).toLocaleDateString();
+    } else {
+      status = "pending";
+    }
+
     submissions.push({
       studentId: student.id,
       studentName: student.name,
       rollNumber: student.rollNumber,
       batch: student.batch,
       email: student.email,
-      submissionDate: new Date(
-        Date.now() - Math.random() * 10 * 24 * 60 * 60 * 1000,
-      ).toLocaleDateString(),
-      submissionTime: `${Math.floor(Math.random() * 23)}:${String(Math.floor(Math.random() * 59)).padStart(2, "0")}`,
-      status: "submitted" as const,
-      grade: Math.floor(Math.random() * 40) + 60,
-      feedback: "Good work. Could improve on the implementation part.",
-      fileName: `assignment_${i + 1}.pdf`,
+      submissionDate: submissionDate,
+      submissionTime: submissionDate ? `${Math.floor(Math.random() * 23)}:${String(Math.floor(Math.random() * 59)).padStart(2, "0")}` : null,
+      status: status,
+      grade: null, // Start ungraded
+      feedback: "", // Start with no feedback
+      fileName: status !== 'pending' ? `assignment_${student.id}.pdf` : null,
     });
-  }
-
-  // Overdue students
-  for (let i = 0; i < assignment.overdue; i++) {
-    const student =
-      SAMPLE_STUDENTS[(assignment.submitted + i) % SAMPLE_STUDENTS.length];
-    submissions.push({
-      studentId: student.id,
-      studentName: student.name,
-      rollNumber: student.rollNumber,
-      batch: student.batch,
-      email: student.email,
-      submissionDate: new Date(
-        Date.now() - (15 + Math.random() * 10) * 24 * 60 * 60 * 1000,
-      ).toLocaleDateString(),
-      submissionTime: `${Math.floor(Math.random() * 23)}:${String(Math.floor(Math.random() * 59)).padStart(2, "0")}`,
-      status: "overdue" as const,
-      grade: Math.floor(Math.random() * 35) + 50,
-      feedback: "Submitted late. -10% penalty applied.",
-      fileName: `assignment_late_${i + 1}.pdf`,
-    });
-  }
-
-  // Pending students
-  for (let i = 0; i < assignment.pending; i++) {
-    const student =
-      SAMPLE_STUDENTS[
-        (assignment.submitted + assignment.overdue + i) % SAMPLE_STUDENTS.length
-      ];
-    submissions.push({
-      studentId: student.id,
-      studentName: student.name,
-      rollNumber: student.rollNumber,
-      batch: student.batch,
-      email: student.email,
-      submissionDate: null,
-      submissionTime: null,
-      status: "pending" as const,
-      grade: null,
-      feedback: null,
-      fileName: null,
-    });
-  }
+  });
 
   return submissions;
 };
@@ -87,16 +64,25 @@ export default function AssignmentSubmissions() {
   const assignment =
     SAMPLE_ASSIGNMENTS.find((a) => a.id === assignmentId) ||
     SAMPLE_ASSIGNMENTS[0];
-  const submissions = generateSubmissionData(assignment);
+  
+  const submissions = useMemo(() => generateSubmissionData(assignment), [assignmentId, assignment]);
+
   const [filterStatus, setFilterStatus] = useState<
     "all" | "submitted" | "overdue" | "pending"
   >("all");
 
+  // State for grades and feedback
+  const [grades, setGrades] = useState<Record<string, string>>({});
+  const [feedbacks, setFeedbacks] = useState<Record<string, string>>({});
+
   const filteredSubmissions = submissions.filter((sub) => {
     if (filterStatus === "all") return true;
+    // Special case: "submitted" tab should also show "overdue" submissions
+    if (filterStatus === "submitted") return sub.status === "submitted" || sub.status === "overdue";
     return sub.status === filterStatus;
   });
 
+  
   const getStatusBadge = (status: string) => {
     switch (status) {
       case "submitted":
@@ -179,53 +165,21 @@ export default function AssignmentSubmissions() {
           </div>
         </div>
 
-        {/* Filter Buttons */}
-        <div className="mb-6 flex gap-2 flex-wrap">
-          <button
-            onClick={() => setFilterStatus("all")}
-            className={cn(
-              "px-4 py-2 rounded-lg font-medium transition-colors",
-              filterStatus === "all"
-                ? "bg-primary-600 text-white"
-                : "bg-slate-100 text-slate-700 hover:bg-slate-200",
-            )}
-          >
-            All ({submissions.length})
-          </button>
-          <button
-            onClick={() => setFilterStatus("submitted")}
-            className={cn(
-              "px-4 py-2 rounded-lg font-medium transition-colors",
-              filterStatus === "submitted"
-                ? "bg-success-600 text-white"
-                : "bg-success-100 text-success-700 hover:bg-success-200",
-            )}
-          >
-            Submitted ({assignment.submitted})
-          </button>
-          <button
-            onClick={() => setFilterStatus("overdue")}
-            className={cn(
-              "px-4 py-2 rounded-lg font-medium transition-colors",
-              filterStatus === "overdue"
-                ? "bg-warning-600 text-white"
-                : "bg-warning-100 text-warning-700 hover:bg-warning-200",
-            )}
-          >
-            Overdue ({assignment.overdue})
-          </button>
-          <button
-            onClick={() => setFilterStatus("pending")}
-            className={cn(
-              "px-4 py-2 rounded-lg font-medium transition-colors",
-              filterStatus === "pending"
-                ? "bg-slate-600 text-white"
-                : "bg-slate-100 text-slate-700 hover:bg-slate-200",
-            )}
-          >
-            Pending ({assignment.pending})
-          </button>
-        </div>
+        {/* Filter Tabs */}
+        <Tabs
+          value={filterStatus}
+          onValueChange={(value) =>
+            setFilterStatus(value as "all" | "submitted" | "overdue" | "pending")
+          }
+          className="mb-6"
+        >
+          <TabsList>
+            <TabsTrigger value="all">All ({submissions.length})</TabsTrigger>
+            <TabsTrigger value="submitted">Submitted ({assignment.submitted + assignment.overdue})</TabsTrigger>
+            <TabsTrigger value="pending">Pending ({assignment.pending})</TabsTrigger>
+            <TabsTrigger value="overdue">Overdue ({assignment.overdue})</TabsTrigger>
+          </TabsList>
+        </Tabs>
 
         {/* Submissions List */}
         <div className="space-y-4">
@@ -307,19 +261,56 @@ export default function AssignmentSubmissions() {
                     </div>
                   </div>
 
-                  {/* Feedback Section */}
-                  {submission.feedback && (
-                    <div className="mt-4 p-3 bg-slate-50 rounded-lg border border-slate-200">
-                      <p className="text-sm font-medium text-slate-900 mb-1">
-                        Feedback
-                      </p>
-                      <p className="text-sm text-slate-600">
-                        {submission.feedback}
-                      </p>
-                    </div>
+                  {/* Grading Form */}
+                  {(submission.status === "submitted" ||
+                    submission.status === "overdue") && (
+                    <form
+                      className="mt-4 pt-4 border-t border-slate-200 space-y-3"
+                      onSubmit={(e) => {
+                        e.preventDefault();
+                        const grade = grades[submission.studentId] || "";
+                        const feedback = feedbacks[submission.studentId] || "";
+                        console.log({
+                          studentId: submission.studentId,
+                          grade,
+                          feedback,
+                        });
+                        alert(
+                          `Grade submitted for ${submission.studentName}: ${grade}`,
+                        );
+                      }}
+                    >
+                      <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                        <div className="col-span-1">
+                          <Label htmlFor={`grade-${submission.studentId}`} className="text-xs font-medium">Grade</Label>
+                          <Input
+                            id={`grade-${submission.studentId}`}
+                            type="text"
+                            placeholder={`/ ${assignment.totalMarks}`}
+                            value={grades[submission.studentId] || ""}
+                            onChange={(e) => setGrades(prev => ({ ...prev, [submission.studentId]: e.target.value }))}
+                            className="h-9 mt-1"
+                          />
+                        </div>
+                      </div>
+                      <div>
+                        <Label htmlFor={`feedback-${submission.studentId}`} className="text-xs font-medium">Feedback</Label>
+                        <Textarea
+                          id={`feedback-${submission.studentId}`}
+                          placeholder="Provide feedback..."
+                          rows={2}
+                          value={feedbacks[submission.studentId] || ""}
+                          onChange={(e) => setFeedbacks(prev => ({ ...prev, [submission.studentId]: e.target.value }))}
+                          className="mt-1"
+                        />
+                      </div>
+                      <Button type="submit" size="sm" className="bg-primary-600 hover:bg-primary-700">
+                        Submit Grade
+                      </Button>
+                    </form>
                   )}
 
-                  {/* Grade Input for Pending */}
+                  {/* Pending Action */}
                   {submission.status === "pending" && (
                     <div className="mt-4 pt-4 border-t border-slate-200">
                       <p className="text-sm text-slate-600 mb-2">

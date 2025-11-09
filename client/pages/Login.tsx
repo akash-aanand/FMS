@@ -20,7 +20,7 @@ export default function Login() {
 
     // Simulate authentication delay
     setTimeout(() => {
-      // --- FIX: Check for the specific demo email and any password ---
+      // Check for the specific demo email and any non-empty password
       if (
         credentials.email === 'teacher@college.edu' &&
         credentials.password
@@ -33,8 +33,11 @@ export default function Login() {
       } else {
         setError('Invalid email. Please use the demo credentials.');
       }
+      
+      // --- THIS IS THE FIX ---
+      setIsLoading(false); // Was 'False', now 'false'
       // --- END FIX ---
-      setIsLoading(false);
+
     }, 500);
   };
 

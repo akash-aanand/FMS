@@ -27,16 +27,20 @@ export default function Login() {
       ) {
         localStorage.setItem('isLoggedIn', 'true');
         localStorage.setItem('userEmail', credentials.email);
-        navigate('/');
+        
+        // --- THIS IS THE FIX ---
+        // Replace navigate('/') with a full page reload
+        // to force the ProtectedRoute to re-check localStorage.
+        window.location.reload();
+        // --- END FIX ---
+
       } else if (!credentials.email || !credentials.password) {
         setError('Please enter both email and password');
       } else {
         setError('Invalid email. Please use the demo credentials.');
       }
       
-      // --- THIS IS THE FIX ---
-      setIsLoading(false); // Was 'False', now 'false'
-      // --- END FIX ---
+      setIsLoading(false);
 
     }, 500);
   };
